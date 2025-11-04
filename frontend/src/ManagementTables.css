@@ -1,0 +1,238 @@
+/* === CONTENEDOR PRINCIPAL === */
+.mg-container {
+  font-family: 'Poppins', sans-serif;
+  color: #4b4b4b;
+  padding: 20px;
+  background: #fafafa;
+  min-height: 100vh;
+}
+
+/* === CABECERA (título, búsqueda, filtros) === */
+.mg-header-container {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+/* === INPUT DE BÚSQUEDA === */
+.mg-input {
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 8px 12px;
+  transition: all 0.3s ease;
+  outline: none;
+}
+
+.mg-input:focus {
+  border-color: #a1866f;
+  box-shadow: 0 0 4px rgba(161, 134, 111, 0.4);
+}
+
+/* === FILTROS === */
+.mg-filters {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  gap: 15px;
+  margin-top: 16px;
+}
+
+.mg-filters div {
+  flex: 1;
+  min-width: 180px;
+}
+
+.mg-filters label {
+  display: block;
+  font-size: 0.9rem;
+  color: #6d5d47;
+  margin-bottom: 4px;
+}
+
+.mg-filters select,
+.mg-filters input {
+  width: 100%;
+  border: 1px solid #dcdcdc;
+  border-radius: 8px;
+  padding: 6px 10px;
+  background: #fff;
+  transition: border 0.3s ease;
+}
+
+.mg-filters select:focus,
+.mg-filters input:focus {
+  border-color: #a1866f;
+}
+
+.mg-filters button {
+  background: #a1866f;
+  color: #fff;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.mg-filters button:hover {
+  background: #8b6e56;
+}
+
+/* === TABLA === */
+.table-section {
+  flex: 1;
+}
+
+.mg-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.mg-table th {
+  background: #f3f3f3;
+  text-align: left;
+  padding: 12px;
+  font-size: 0.95rem;
+  color: #6d5d47;
+}
+
+.mg-table td {
+  padding: 10px 12px;
+  border-top: 1px solid #eee;
+}
+
+.mg-table tr:hover {
+  background: #faf6f2;
+}
+
+.mg-table button {
+  background: #a1866f;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 10px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.mg-table button:hover {
+  background: #8b6e56;
+}
+
+/* === PANEL LATERAL DESPLEGABLE === */
+.panel-container {
+  position: relative;
+  display: flex;
+  width: 100%;
+  min-height: 500px;
+  overflow: hidden;
+}
+
+/* Panel cerrado */
+.side-panel {
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 0;
+  height: 100%;
+  background: #fff;
+  overflow-y: auto;
+  box-shadow: -4px 0 10px rgba(0, 0, 0, 0.1);
+  transition: all 0.4s ease;
+  border-radius: 12px 0 0 12px;
+  opacity: 0;
+  visibility: hidden;
+}
+
+/* Panel abierto */
+.side-panel.open {
+  width: 380px;
+  padding: 24px;
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Contenido dentro del panel */
+.panel-content {
+  opacity: 0;
+  transform: translateX(30px);
+  transition: all 0.4s ease;
+}
+
+.side-panel.open .panel-content {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* Botón cerrar */
+.panel-content button {
+  background: #a1866f;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 14px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.panel-content button:hover {
+  background: #8b6e56;
+}
+
+/* --- Panel de detalle estilo pagos/prendas --- */
+.edit-panel {
+  max-width: 520px;
+  margin: 32px auto;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 16px #e5e7eb;
+  padding: 32px 28px;
+}
+.edit-panel h3 {
+  font-size: 1.2rem;
+  color: #6d5d47;
+  font-weight: 700;
+  margin-bottom: 18px;
+}
+.edit-panel label {
+  font-weight: 600;
+  color: #8d7b5a;
+  font-size: 1rem;
+  display: block;
+  margin-bottom: 4px;
+}
+.edit-panel input[type="text"],
+.edit-panel textarea {
+  width: 100%;
+  background: #f8f9fa;
+  border-radius: 6px;
+  border: 1px solid #e5e7eb;
+  padding: 6px 10px;
+  margin-bottom: 8px;
+  font-size: 1rem;
+  color: #444;
+}
+.edit-panel textarea {
+  min-height: 60px;
+}
+.edit-panel .mg-back-btn {
+  margin-top: 18px;
+}
+
+/* === RESPONSIVE === */
+@media (max-width: 768px) {
+  .mg-filters {
+    flex-direction: column;
+  }
+
+  .side-panel.open {
+    width: 100%;
+  }
+}

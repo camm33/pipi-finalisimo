@@ -1,0 +1,320 @@
+/* Animaciones para paneles de gestión */
+
+.panel-container {
+  display: flex;
+  gap: 20px;
+  height: calc(100vh - 250px); /* Más espacio para la tabla */
+  overflow: hidden;
+}
+
+.main-content {
+  flex: 1;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Mejorar la tabla para que use todo el espacio */
+.mg-table {
+  flex: 1;
+  height: 100%;
+}
+
+.mg-table tbody {
+  display: block;
+  overflow-y: auto;
+  flex: 1;
+  max-height: calc(100vh - 350px);
+}
+
+.mg-table thead,
+.mg-table tbody tr {
+  display: table;
+  width: 100%;
+  table-layout: fixed;
+}
+
+.side-panel {
+  width: 0;
+  opacity: 0;
+  overflow: hidden;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  background: white;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  transform: translateX(20px);
+  position: relative;
+}
+
+.side-panel.open {
+  width: 420px;
+  opacity: 1;
+  transform: translateX(0);
+  padding: 20px;
+}
+
+.side-panel.open .panel-content {
+  animation: slideInContent 0.4s cubic-bezier(0.4, 0, 0.2, 1) 0.1s forwards;
+  opacity: 0;
+}
+
+.panel-content {
+  height: 100%;
+  overflow-y: auto;
+}
+
+@keyframes slideInContent {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Animación para las filas de la tabla */
+.table-row {
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.table-row:hover {
+  background-color: #f8fafc;
+  transform: translateX(2px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.table-row.selected {
+  background-color: #eff6ff;
+  border-left: 4px solid #3b82f6;
+}
+
+/* Botones animados */
+.animated-btn {
+  transition: all 0.2s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.animated-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.animated-btn:active {
+  transform: translateY(0);
+}
+
+/* Efecto ripple para botones */
+.animated-btn::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  transition: width 0.3s, height 0.3s, top 0.3s, left 0.3s;
+  transform: translate(-50%, -50%);
+}
+
+.animated-btn:active::before {
+  width: 200px;
+  height: 200px;
+}
+
+/* Header del panel */
+.panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 2px solid #e5e7eb;
+}
+
+.panel-header h3 {
+  margin: 0;
+  color: #1f2937;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #6b7280;
+  transition: color 0.2s ease;
+  padding: 5px;
+  border-radius: 50%;
+}
+
+.close-btn:hover {
+  color: #ef4444;
+  background-color: #fee2e2;
+}
+
+/* Formulario animado */
+.form-group {
+  margin-bottom: 16px;
+  animation: fadeInUp 0.3s ease forwards;
+  opacity: 0;
+}
+
+.form-group:nth-child(1) { animation-delay: 0.1s; }
+.form-group:nth-child(2) { animation-delay: 0.15s; }
+.form-group:nth-child(3) { animation-delay: 0.2s; }
+.form-group:nth-child(4) { animation-delay: 0.25s; }
+.form-group:nth-child(5) { animation-delay: 0.3s; }
+.form-group:nth-child(6) { animation-delay: 0.35s; }
+.form-group:nth-child(7) { animation-delay: 0.4s; }
+.form-group:nth-child(8) { animation-delay: 0.45s; }
+.form-group:nth-child(9) { animation-delay: 0.5s; }
+.form-group:nth-child(10) { animation-delay: 0.55s; }
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.form-label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 500;
+  color: #374151;
+  font-size: 0.875rem;
+}
+
+.form-input {
+  width: 100%;
+  padding: 10px 12px;
+  border: 2px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  transition: all 0.2s ease;
+  background-color: white;
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+/* Botones del formulario */
+.form-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #d4b896, #c5a882);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, #c5a882, #b8956d);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(196, 168, 130, 0.4);
+}
+
+.btn-danger {
+  background: linear-gradient(135deg, #a0522d, #8b4513);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-danger:hover {
+  background: linear-gradient(135deg, #8b4513, #734020);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(160, 82, 45, 0.4);
+}
+
+.btn-secondary {
+  background: linear-gradient(135deg, #9A7738, #8b6d2f);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-secondary:hover {
+  background: linear-gradient(135deg, #8b6d2f, #7a5f26);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(139, 109, 47, 0.4);
+}
+
+/* Loading animation */
+.loading-spinner {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid #ffffff;
+  border-radius: 50%;
+  border-top-color: transparent;
+  animation: spin 1s ease-in-out infinite;
+  margin-right: 8px;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Estilos para inputs de búsqueda */
+input[type="text"]:focus,
+input[type="search"]:focus {
+  border-color: #d4b896 !important;
+  box-shadow: 0 0 0 3px rgba(212, 184, 150, 0.1) !important;
+}
+
+input[type="text"]:hover,
+input[type="search"]:hover {
+  border-color: #c5a882 !important;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .panel-container {
+    flex-direction: column;
+    height: auto;
+  }
+  
+  .side-panel.open {
+    width: 100%;
+    margin-top: 20px;
+  }
+  
+  .main-content {
+    margin-bottom: 20px;
+  }
+}

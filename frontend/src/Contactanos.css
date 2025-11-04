@@ -1,0 +1,147 @@
+/* Botón volver estilizado */
+.mg-back-btn {
+  display: inline-block;
+  padding: 12px 28px;
+  font-size: 1.08rem;
+  font-weight: 700;
+  color: #fff;
+  background: linear-gradient(90deg, #b08a43 0%, #c5a882 100%);
+  border: none;
+  border-radius: 14px;
+  box-shadow: 0 2px 8px rgba(154,119,56,0.13);
+  cursor: pointer;
+  transition: background 0.2s, transform 0.2s;
+  margin: 18px 0 0 0;
+  letter-spacing: 0.5px;
+}
+.mg-back-btn:hover {
+  background: linear-gradient(90deg, #c5a882 0%, #b08a43 100%);
+  color: #fffbe6;
+  transform: scale(1.04) translateY(-2px);
+  box-shadow: 0 8px 18px rgba(154,119,56,0.18);
+}
+/* Contactanos page inspired by the provided card and login tones */
+.ct-root {
+  min-height: 100vh;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Segoe UI', Arial, sans-serif;
+  color: #333;
+  padding: 24px 12px;
+}
+
+.ct-wrapper {
+  width: 100%;
+  max-width: 980px;
+  display: grid;
+  grid-template-columns: 360px 1fr;
+  gap: 0;
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 10px 28px rgba(0,0,0,0.10);
+  overflow: hidden;
+  border: 1px solid #eee7da;
+}
+
+/* Left visual panel */
+.ct-left {
+  position: relative;
+  background: #6b4a2b; /* deep brand tone similar to login button */
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+.ct-left::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(154,119,56,0.15) 0%, rgba(0,0,0,0.25) 100%);
+}
+.ct-brand-badge {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  background: #e6dbb8;
+  color: #9A7738;
+  padding: 8px 12px;
+  border-radius: 999px;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+.ct-photo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  mix-blend-mode: normal;
+  opacity: 0.95;
+}
+
+/* Right content card */
+.ct-right {
+  padding: 28px 26px;
+  background: #fff9f4; /* soft warm like the sample */
+}
+.ct-title {
+  margin: 0 0 6px 0;
+  color: #333;
+  font-weight: 800;
+  font-size: 1.6rem;
+}
+.ct-subtitle {
+  margin: 0 0 20px 0;
+  color: #555;
+}
+
+.ct-list {
+  display: grid;
+  gap: 12px;
+  margin: 16px 0 20px 0;
+}
+
+.ct-item {
+  background: #fff;
+  border: 1px solid #f0efe9;
+  border-left: 6px solid #9A7738; /* brand accent */
+  border-radius: 10px;
+  padding: 12px 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.ct-item .icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #e6dbb8;
+  color: #6b4a2b;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+}
+.ct-item a {
+  color: #9A7738;
+  text-decoration: none;
+  font-weight: 600;
+}
+.ct-item a:hover { color: #B08A43; text-decoration: underline; }
+
+.ct-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.ct-note {
+  color: #777;
+  font-size: 0.92rem;
+}
+
+@media (max-width: 900px) {
+  .ct-wrapper { grid-template-columns: 1fr; }
+  .ct-left { height: 200px; }
+}

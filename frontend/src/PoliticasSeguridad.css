@@ -1,0 +1,65 @@
+/* PoliticasSeguridad styles inspired by IniciarSesion.css (brand tones) */
+.ps-root {
+  min-height: 100vh;
+  background: #ffffff; /* fondo blanco, limpio */
+  padding: 24px 16px;
+  font-family: 'Segoe UI', Arial, sans-serif;
+  color: #333;
+}
+
+.ps-header {
+  max-width: 1000px;
+  margin: 0 auto 16px auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.ps-title {
+  margin: 0;
+  font-size: 1.9rem;
+  font-weight: 700;
+  color: #9A7738; /* color de marca usado en login */
+  letter-spacing: 0.5px;
+}
+
+.ps-card {
+  max-width: 1000px;
+  margin: 0 auto;
+  background: #fff; /* tarjeta blanca sobre fondo blanco para consistencia */
+  border: 1px solid #eee7da; /* leve borde con tono cálido */
+  border-radius: 12px;
+  box-shadow: 0 6px 24px rgba(0,0,0,0.06);
+  padding: 22px;
+}
+
+.ps-section + .ps-section { margin-top: 18px; }
+
+.ps-section h2 {
+  margin: 0 0 8px 0;
+  font-size: 1.25rem;
+  color: #9A7738; /* subtítulos con tono de marca */
+  border-left: 6px solid #e6dbb8; /* acento suave como el panel de login */
+  padding-left: 10px;
+}
+
+.ps-section p { margin: 0 0 8px 0; line-height: 1.6; }
+
+.ps-section ul {
+  margin: 6px 0 10px 20px;
+  padding: 0;
+  line-height: 1.6;
+}
+
+.ps-section li { margin: 4px 0; }
+
+/* Ajuste del marcador (bullet) a tonos de marca cuando sea compatible */
+.ps-section ul li::marker {
+  color: #B08A43;
+}
+
+/* Botón volver ya está en ManagementTables.css (mg-back-btn) */
+@media (max-width: 720px) {
+  .ps-title { font-size: 1.4rem; }
+  .ps-card { padding: 16px; }
+}

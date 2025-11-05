@@ -372,6 +372,14 @@ function GestionPrendasAdmin() {
                             ))}
                             <div style={{ display: 'flex', gap: '10px', marginTop: '18px' }}>
                               <button type="submit" className="mg-btn save">Guardar cambios</button>
+                              <button 
+                                type="button" 
+                                className="mg-btn" 
+                                style={{background: '#2196F3'}}
+                                onClick={() => navigate(`/AdminDashboard/editar_publicacion/${prenda.id_publicacion || prenda.id}`)}
+                              >
+                                ✏️ Editar Completo
+                              </button>
                               <button type="button" className="mg-btn delete" onClick={async () => {
                                 if (!window.confirm('¿Seguro que quieres borrar esta prenda?')) return;
                                 const headers = {

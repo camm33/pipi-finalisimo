@@ -79,10 +79,17 @@ def obtener_perfil(id_usuario):
             if not filas:
                 return None
 
-            columnas = [desc[0] for desc in cursor.description]
-            perfil = [dict(zip(columnas, fila)) for fila in filas]
+            # Con DictCursor, las filas ya son diccionarios
+            perfil = filas
 
             # Agrupar datos del usuario
+            fecha_nac = perfil[0]['fecha_nacimiento']
+            # Convertir fecha a string si es necesario
+            if fecha_nac and hasattr(fecha_nac, 'isoformat'):
+                fecha_nac = fecha_nac.isoformat()
+            elif fecha_nac:
+                fecha_nac = str(fecha_nac)
+            
             usuario = {
                 'id_usuario': perfil[0]['id_usuario'],
                 'PrimerNombre': perfil[0]['PrimerNombre'],
@@ -91,7 +98,7 @@ def obtener_perfil(id_usuario):
                 'SegundoApellido': perfil[0]['SegundoApellido'],
                 'username_usuario': perfil[0]['username_usuario'],
                 'email_usuario': perfil[0]['email_usuario'],
-                'fecha_nacimiento': perfil[0]['fecha_nacimiento'].isoformat() if perfil[0]['fecha_nacimiento'] else None,
+                'fecha_nacimiento': fecha_nac,
                 'talla_usuario': perfil[0]['talla_usuario'],
                 'foto_usuario': perfil[0]['foto_usuario'],
                 'promedio_valoracion': perfil[0]['promedio_valoracion'],
@@ -104,11 +111,14 @@ def obtener_perfil(id_usuario):
                     # Asignar tipo de transacción aleatorio a prendas reales
                     tipo_info = asignar_tipo_transaccion_aleatorio()
                     
+                    # Asegurarse de que siempre hay una foto
+                    foto_prenda = row['foto_prenda'] if row['foto_prenda'] else 'default.jpg'
+                    
                     prenda = {
                         'id_prenda': row['id_prenda'],
                         'id_publicacion': row['id_publicacion'],
                         'nombre_prenda': row['nombre_prenda'],
-                        'foto_prenda': row['foto_prenda'],
+                        'foto_prenda': foto_prenda,
                         'promedio_valoracion': row['promedio_valoracion'],
                         'tipo_transaccion': tipo_info['tipo_transaccion'],
                         'precio': tipo_info['precio'],

@@ -1,4 +1,5 @@
 from flask import Blueprint, request, jsonify, session, current_app
+from flask_cors import cross_origin
 from flask_mail import Message
 import bcrypt
 import os
@@ -117,6 +118,10 @@ def register():
             "token": token,
             "foto": foto_filename,
         }
+        
+        print(f"✅ Token generado y guardado en sesión: {token}")
+        print(f"📧 Correo: {correo}")
+        print(f"📋 Sesión guardada: {session.get('registro_temp') is not None}")
 
         response_payload = {"success": True, "mensaje": "Se envió un token de verificación a tu correo"}
         if current_app.config.get("DEBUG_TOKEN_IN_RESPONSE"):
@@ -130,23 +135,48 @@ def register():
 
 
 # ---------- VERIFICAR ----------
-@login_bp.route('/verificar', methods=['POST'])
+@login_bp.route('/verificar', methods=['GET', 'POST'])
+@cross_origin(origins=["http://localhost:3000"], supports_credentials=True)
 def verificar():
     try:
+        # Si es GET, simplemente retornar un mensaje informativo
+        if request.method == 'GET':
+            return jsonify({
+                "success": True, 
+                "mensaje": "Endpoint de verificación. Use POST para verificar su cuenta."
+            }), 200
+        
+        # Si es POST, procesar la verificación
+        print("🔍 Verificando token...")
         data = request.get_json()
         if not data:
+            print("❌ No se recibieron datos")
             return jsonify({"success": False, "mensaje": "⚠ No se recibieron datos"}), 400
 
         email = data.get("email") or data.get("correo")
         token_usuario = data.get("token")
+        
+        print(f"📧 Email recibido: {email}")
+        print(f"🔑 Token recibido: {token_usuario}")
 
         registro_temp = session.get("registro_temp")
+        print(f"📋 Datos en sesión: {registro_temp is not None}")
+        
         if registro_temp:
+            print(f"✅ Sesión de registro encontrada")
+            print(f"   - Correo en sesión: {registro_temp.get('correo')}")
+            print(f"   - Token en sesión: {registro_temp.get('token')}")
+            
             if email != registro_temp.get("correo"):
+                print(f"❌ El correo no coincide: {email} != {registro_temp.get('correo')}")
                 return jsonify({"success": False, "mensaje": "⚠ El correo no coincide"}), 400
-            if token_usuario != registro_temp.get("token"):
+            
+            if str(token_usuario) != str(registro_temp.get("token")):
+                print(f"❌ Token inválido: {token_usuario} != {registro_temp.get('token')}")
                 return jsonify({"success": False, "mensaje": "❌ Token inválido"}), 400
 
+            print("✅ Token y correo válidos, insertando usuario...")
+            
             from app import mysql
             cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
             foto_nombre = registro_temp.get("foto") if registro_temp.get("foto") else 'default.jpg'
@@ -176,7 +206,8 @@ def verificar():
             )
             mysql.connection.commit()
             session.pop("registro_temp", None)
-
+            
+            print("✅ Usuario registrado exitosamente")
             return jsonify({"success": True, "mensaje": "✅ Cuenta verificada y registrada correctamente"}), 200
 
         login_temp = session.get("login_temp")

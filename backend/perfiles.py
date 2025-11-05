@@ -1,5 +1,6 @@
 from flask import Blueprint, request, session, jsonify, send_from_directory, current_app
 import os
+import pymysql
 from bd import obtener_conexion
 
 # ==================== CONFIGURACIÓN ====================
@@ -18,7 +19,7 @@ def otros_perfil(id_usuario):
     """Obtiene las publicaciones y datos básicos de un usuario desde la vista vista_otros_perfiles."""
     conexion = obtener_conexion()
     try:
-        with conexion.cursor() as cursor:
+        with conexion.cursor(pymysql.cursors.DictCursor) as cursor:
             cursor.execute(
                 """
                 SELECT 
@@ -38,8 +39,7 @@ def otros_perfil(id_usuario):
                 (id_usuario,)
             )
             filas = cursor.fetchall()
-            columnas = [desc[0] for desc in cursor.description]
-            return [dict(zip(columnas, fila)) for fila in filas]
+            return filas
     finally:
         conexion.close()
 
@@ -48,7 +48,7 @@ def ef_valoracion_usuario(id_usuario):
     """Calcula el promedio de valoraciones de un usuario."""
     conexion = obtener_conexion()
     try:
-        with conexion.cursor() as cursor:
+        with conexion.cursor(pymysql.cursors.DictCursor) as cursor:
             cursor.execute(
                 """
                 SELECT 
@@ -65,8 +65,7 @@ def ef_valoracion_usuario(id_usuario):
                 (id_usuario,)
             )
             filas = cursor.fetchall()
-            columnas = [desc[0] for desc in cursor.description]
-            return [dict(zip(columnas, fila)) for fila in filas]
+            return filas
     finally:
         conexion.close()
 
@@ -94,7 +93,7 @@ def obtener_datos_perfil(id_usuario):
     # Primero, obtener datos del usuario directamente
     conexion = obtener_conexion()
     try:
-        with conexion.cursor() as cursor:
+        with conexion.cursor(pymysql.cursors.DictCursor) as cursor:
             # Obtener datos básicos del usuario
             cursor.execute(
                 """
@@ -147,11 +146,14 @@ def obtener_datos_perfil(id_usuario):
     # Agregar prendas si existen
     for p in datos_prendas:
         if p.get("id_prenda") is not None:
+            # Asegurarse de que siempre hay una foto
+            foto_prenda = p["foto_prenda"] if p["foto_prenda"] else "default.jpg"
+            
             perfil["prendas"].append({
                 "id_prenda": p["id_prenda"],
                 "id_publicacion": p["id_publicacion"],
                 "nombre_prenda": p["nombre_prenda"],
-                "foto_prenda": p["foto_prenda"],
+                "foto_prenda": foto_prenda,
                 "promedio_valoracion": promedio_valoracion
             })
 

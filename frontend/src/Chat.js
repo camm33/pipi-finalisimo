@@ -206,16 +206,17 @@ function Chat({ id_destinatario, destinatarioInfo, onBack }) {
             <img
               src={
                 destinatario.foto_usuario
-                  ? `${BACKEND_URL}/uploads${
-                      destinatario.foto_usuario.startsWith("/")
-                        ? destinatario.foto_usuario
-                        : "/" + destinatario.foto_usuario
-                    }`
-                  : "/default-user.png"
+                  ? `${BACKEND_URL}/uploads/${destinatario.foto_usuario}`
+                  : `${BACKEND_URL}/uploads/default.jpg`
               }
               alt="Foto del usuario"
               className="destinatario-foto"
               style={{ width: 48, height: 48, borderRadius: "50%", marginRight: 12 }}
+              onError={(e) => {
+                console.error("Error cargando foto de usuario en chat:", e.target.src);
+                e.target.onerror = null;
+                e.target.src = `${BACKEND_URL}/uploads/default.jpg`;
+              }}
             />
             <h3 style={{ fontWeight: 700, fontSize: "1.2rem", margin: 0 }}>
               {destinatario.username || destinatario.nombre_completo}

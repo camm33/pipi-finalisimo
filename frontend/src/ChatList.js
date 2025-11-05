@@ -1,10 +1,12 @@
 // ChatList.jsx
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { useNotificaciones } from "./hooks/useNotificaciones";
 import Chat from "./Chat";
 import "./ChatList.css";
 
 function ChatList({ onClose }) {
+  const navigate = useNavigate();
   const [conversaciones, setConversaciones] = useState([]);
   const [usuarios, setUsuarios] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -15,6 +17,15 @@ function ChatList({ onClose }) {
 
   const BACKEND_URL = "http://localhost:5000";
   const id_usuario = localStorage.getItem("id_usuario");
+
+  // Función para cerrar el chat
+  const handleClose = () => {
+    if (onClose) {
+      onClose();
+    } else {
+      navigate(-1); // Volver a la página anterior
+    }
+  };
 
   // Cargar conversaciones existentes
   useEffect(() => {
@@ -133,7 +144,7 @@ function ChatList({ onClose }) {
           <button className="new-chat-btn" onClick={() => setShowNewChat(!showNewChat)}>
             ✏
           </button>
-          <button className="close-btn" onClick={onClose}>
+          <button className="close-btn" onClick={handleClose}>
             ✕
           </button>
         </div>

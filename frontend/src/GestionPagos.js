@@ -30,17 +30,24 @@ function GestionPagos() {
       "Content-Type": "application/json",
     };
 
+    console.log("📡 Cargando pagos desde: http://localhost:5000/api/pagos/");
+
     fetch('http://localhost:5000/api/pagos/', {
       credentials: "include",
       headers
     })
       .then(r => {
+        console.log("📦 Response status:", r.status);
         if (!r.ok) throw new Error(`HTTP error! status: ${r.status}`);
         return r.json();
       })
-      .then(data => setPagos(data))
+      .then(data => {
+        console.log("✅ Pagos recibidos:", data);
+        console.log("📊 Total de pagos:", data.length);
+        setPagos(data);
+      })
       .catch(err => {
-        console.error('Error cargando pagos', err);
+        console.error('❌ Error cargando pagos', err);
         showMessage('Error cargando pagos: ' + err.message, 'error');
       });
   }, []);

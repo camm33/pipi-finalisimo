@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Header from './Header';
 import PublicHeader from './PublicHeader';
+import ChatList from './ChatList';
 import './Home.css';
 
 export default function Home() {
@@ -14,6 +15,7 @@ export default function Home() {
   const [filtroTalla, setFiltroTalla] = useState("");
   const [filtroPrecio, setFiltroPrecio] = useState("");
   const [mostrarFiltros, setMostrarFiltros] = useState(false);
+  const [openChatModal, setOpenChatModal] = useState(false); // Estado para el modal de chat
   
   // Estados para el carrusel
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -498,13 +500,22 @@ export default function Home() {
       {/* Botón flotante de chat */}
       <button 
         className="chat-flotante" 
-        onClick={() => navigate('/chat')}
+        onClick={() => setOpenChatModal(true)}
         title="Abrir Chat"
       >
         <svg viewBox="0 0 24 24" fill="currentColor">
           <path d="M20 2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h4l4 4 4-4h4c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-2 12H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z"/>
         </svg>
       </button>
+
+      {/* Modal de Chat */}
+      {openChatModal && (
+        <div className="chat-modal-overlay" onClick={() => setOpenChatModal(false)}>
+          <div className="chat-modal-container" onClick={(e) => e.stopPropagation()}>
+            <ChatList onClose={() => setOpenChatModal(false)} />
+          </div>
+        </div>
+      )}
     </div>
   );
 }

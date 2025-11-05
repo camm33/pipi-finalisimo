@@ -260,12 +260,24 @@ function MiPerfil() {
 
   // Función para manejar click en prendas según el modo
   const handlePrendaClick = (prenda) => {
-    if (isEditMode && isOwnProfile) {
-      // Modo edición: ir a editar prenda
-      navigate(`/gestion_prendas/${prenda.id_prenda}`);
+    console.log("🔍 Objeto prenda completo:", prenda);
+    
+    if (isOwnProfile) {
+      // Si es tu propio perfil, ir a gestionar prenda usando id_publicacion
+      const idPub = prenda.id_publicacion;
+      console.log("📌 id_publicacion extraído:", idPub, "tipo:", typeof idPub);
+      
+      if (idPub) {
+        const ruta = `/gestion_prendas/${idPub}`;
+        console.log("🚀 Navegando a:", ruta);
+        navigate(ruta);
+      } else {
+        console.error("❌ Prenda sin id_publicacion:", prenda);
+        alert("Error: No se puede editar esta prenda (falta id_publicacion)");
+      }
     } else {
-      // Modo normal: ir a ver detalles
-      navigate(`/ver_prenda/${prenda.id_prenda}`);
+      // Si es el perfil de otro usuario, ir a ver detalles
+      navigate(`/detalle_prenda/${prenda.id_prenda}`);
     }
   };
 
@@ -324,11 +336,12 @@ function MiPerfil() {
                             ? perfil.foto_usuario_preview
                             : perfil.foto_usuario
                               ? `${BACKEND_URL}/uploads/${perfil.foto_usuario.replace(/^\/+/, '')}`
-                              : "/LOGO.png"
+                              : `${BACKEND_URL}/uploads/default.jpg`
                       }
                       alt="Foto del usuario"
                       onError={(e) => {
-                        e.target.src = '/LOGO.png';
+                        e.target.onerror = null; // Prevenir bucle infinito
+                        e.target.src = `${BACKEND_URL}/uploads/default.jpg`;
                       }}
                     />
                     <div className="avatar-edit-overlay">
@@ -354,13 +367,14 @@ function MiPerfil() {
                         ? perfil.foto_usuario_preview
                         : perfil.foto_usuario
                           ? `${BACKEND_URL}/uploads/${perfil.foto_usuario.replace(/^\/+/, '')}`
-                          : "/LOGO.png"
+                          : `${BACKEND_URL}/uploads/default.jpg`
                     }
                     alt="Foto del usuario"
                     onError={(e) => {
                       console.log("❌ Error cargando foto del usuario:", e.target.src);
                       console.log("📝 Datos del perfil foto_usuario:", perfil.foto_usuario);
-                      e.target.src = '/LOGO.png';
+                      e.target.onerror = null; // Prevenir bucle infinito
+                      e.target.src = `${BACKEND_URL}/uploads/default.jpg`;
                     }}
                     onLoad={(e) => {
                       console.log("✅ Foto del usuario cargada correctamente:", e.target.src);
@@ -545,17 +559,24 @@ function MiPerfil() {
                     {/* Mostrar las prendas reales del usuario */}
                     {perfil.prendas && perfil.prendas.length > 0 ? (
                       <div className="prendas-grid">
-                        {perfil.prendas.map((prenda) => (
-                          <div key={prenda.id_prenda} className="prenda-card">
+                        {perfil.prendas.map((prenda, index) => (
+                          <div key={`${prenda.id_prenda}-${index}`} className="prenda-card">
                               <div className="prenda-image-container">
-                              {prenda.foto_prenda && (
                                 <img
-                                  src={`${BACKEND_URL}/uploads/${prenda.foto_prenda}`}
+                                  src={
+                                    prenda.foto_prenda 
+                                      ? `${BACKEND_URL}/uploads/${prenda.foto_prenda}`
+                                      : `${BACKEND_URL}/uploads/default.jpg`
+                                  }
                                   alt={prenda.nombre_prenda}
                                   className="prenda-image"
                                   onClick={() => handlePrendaClick(prenda)}
+                                  onError={(e) => {
+                                    console.error("Error cargando foto de prenda:", e.target.src);
+                                    e.target.onerror = null;
+                                    e.target.src = `${BACKEND_URL}/uploads/default.jpg`;
+                                  }}
                                 />
-                              )}
                             </div>
                             <div className="prenda-info">
                               <h4 className="prenda-name">{prenda.nombre_prenda}</h4>
@@ -584,16 +605,16 @@ function MiPerfil() {
                               )}
                               
                               <div className="prenda-actions">
-                                {/* Botón principal cambia según el modo de edición */}
+                                {/* Botón principal cambia según si es tu perfil o no */}
                                 <button 
                                   className="prenda-btn primary" 
                                   onClick={() => handlePrendaClick(prenda)}
                                 >
-                                  {isEditMode && isOwnProfile ? '✏ Editar Prenda' : '👁 Ver Detalles'}
+                                  {isOwnProfile ? '⚙️ Gestionar Prenda' : '👁 Ver Detalles'}
                                 </button>
                                 
-                                {/* Botón secundario solo en modo normal */}
-                                {(!isEditMode || !isOwnProfile) && (
+                                {/* Botón secundario solo si NO es tu perfil */}
+                                {!isOwnProfile && (
                                   <button 
                                     className={`prenda-btn ${prenda.tipo_transaccion === 'venta' ? 'purchase' : 'secondary'}`}
                                     onClick={() => navigate("/chat")}
@@ -683,15 +704,21 @@ function MiPerfil() {
                   <div className="media-grid">
                     {perfil.prendas && perfil.prendas.length > 0 ? (
                       perfil.prendas.map((prenda) => (
-                        prenda.foto_prenda && (
-                          <img
-                            key={prenda.id_prenda}
-                            src={`${BACKEND_URL}/uploads/${prenda.foto_prenda}`}
-                            alt={prenda.nombre_prenda}
-                            className="media-item"
-                            onClick={() => navigate(`/gestion_prendas/${prenda.id_prenda}`)}
-                          />
-                        )
+                        <img
+                          key={prenda.id_prenda}
+                          src={
+                            prenda.foto_prenda 
+                              ? `${BACKEND_URL}/uploads/${prenda.foto_prenda}`
+                              : `${BACKEND_URL}/uploads/default.jpg`
+                          }
+                          alt={prenda.nombre_prenda}
+                          className="media-item"
+                          onClick={() => navigate(`/gestion_prendas/${prenda.id_prenda}`)}
+                          onError={(e) => {
+                            e.target.onerror = null;
+                            e.target.src = `${BACKEND_URL}/uploads/default.jpg`;
+                          }}
+                        />
                       ))
                     ) : (
                       <div className="empty-state">

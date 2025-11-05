@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import "./GestionPublicaciones.css";
 
-function GestionPrendas() {
+function GestionarPublicacionesAdmin() {
   const { id } = useParams();
   const navigate = useNavigate();
 
@@ -151,7 +151,7 @@ function GestionPrendas() {
       const data = await res.json();
       if (res.ok) {
         setSuccessMessage(data.message || "✅ Prenda editada correctamente");
-        setTimeout(() => navigate("/MiPerfil"), 2000);
+        setTimeout(() => navigate("/AdminDashboard/publicaciones"), 2000);
       } else {
         setError("Error: " + data.message);
       }
@@ -162,7 +162,7 @@ function GestionPrendas() {
 
   // --- Eliminar prenda ---
   const handleEliminar = async () => {
-    if (!window.confirm("¿Eliminar esta prenda?")) return;
+    if (!window.confirm("¿Eliminar esta publicación y su prenda?")) return;
     setError(null);
     setSuccessMessage(null);
     
@@ -173,8 +173,8 @@ function GestionPrendas() {
       });
       const data = await res.json();
       if (res.ok) {
-        setSuccessMessage(data.message || "✅ Prenda eliminada correctamente");
-        setTimeout(() => navigate("/MiPerfil"), 2000);
+        setSuccessMessage(data.message || "✅ Publicación eliminada correctamente");
+        setTimeout(() => navigate("/AdminDashboard/publicaciones"), 2000);
       } else {
         setError("Error al eliminar: " + data.message);
       }
@@ -209,7 +209,7 @@ function GestionPrendas() {
       <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
         <div className="loading-state">
           <div className="loading-spinner"></div>
-          <p>Cargando prenda...</p>
+          <p>Cargando publicación...</p>
         </div>
       </div>
     );
@@ -230,7 +230,7 @@ function GestionPrendas() {
           <h2 style={{ color: '#ff4444', marginBottom: '15px' }}>❌ Error</h2>
           <p style={{ marginBottom: '20px' }}>{error}</p>
           <button
-            onClick={() => navigate("/MiPerfil")}
+            onClick={() => navigate("/AdminDashboard/publicaciones")}
             style={{
               padding: '10px 20px',
               background: '#333',
@@ -240,7 +240,7 @@ function GestionPrendas() {
               cursor: 'pointer'
             }}
           >
-            Volver a Mi Perfil
+            Volver a Publicaciones
           </button>
         </div>
       </div>
@@ -287,8 +287,8 @@ function GestionPrendas() {
         <button
           className="back-arrow"
           type="button"
-          title="Volver a mi perfil"
-          onClick={() => navigate("/MiPerfil")}
+          title="Volver a publicaciones"
+          onClick={() => navigate("/AdminDashboard/publicaciones")}
           style={{position: 'absolute', top: 20, left: 20}}
         >
           ⟵
@@ -304,22 +304,14 @@ function GestionPrendas() {
           </div>
 
           <form className="editar-formulario" onSubmit={handleEditar}>
-            <h2>EDITAR PRENDA</h2>
-            
-            {/* Debug info */}
-            {console.log("🎨 Renderizando form con valores:", {
-              nombre: form.nombre,
-              descripcion: form.descripcion,
-              talla: form.talla,
-              valor: form.valor
-            })}
+            <h2>EDITAR PUBLICACIÓN (ADMIN)</h2>
             
             <input
               type="text"
               name="nombre"
               value={form.nombre}
               onChange={handleChange}
-              placeholder="Nombre"
+              placeholder="Nombre de la prenda"
             />
             <textarea
               name="descripcion"
@@ -350,10 +342,10 @@ function GestionPrendas() {
 
             <div className="editar-botones">
               <button type="submit" className="btn-accion">
-                EDITAR
+                GUARDAR CAMBIOS
               </button>
               <button type="button" className="btn-accion" onClick={handleEliminar}>
-                ELIMINAR
+                ELIMINAR PUBLICACIÓN
               </button>
             </div>
           </form>
@@ -363,4 +355,4 @@ function GestionPrendas() {
   );
 }
 
-export default GestionPrendas;
+export default GestionarPublicacionesAdmin;

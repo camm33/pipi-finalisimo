@@ -58,6 +58,11 @@ const Header = ({ setIsLoggedIn }) => {
               alt="Perfil"
               className="profile-avatar"
               style={{backgroundImage: 'none'}}
+              onError={(e) => {
+                console.error("Error cargando foto de perfil:", e.target.src);
+                e.target.onerror = null; // Prevenir bucle infinito
+                e.target.src = "http://localhost:5000/uploads/default.jpg";
+              }}
             />
           ) : (
             <div className="profile-avatar">

@@ -14,6 +14,7 @@ import ListaDeDeseos from "./ListaDeDeseos";
 import AppPerfiles from "./perfiles";
 import GestionarPrenda from "./GestionPublicaciones";
 import GestionPrendasAdmin from "./GestionPrendasAdmin";
+import GestionarPublicacionesAdmin from "./GestionarPublicacionesAdmin";
 import GestionUsuarios from "./GestionUsuarios";
 import GestionPagos from "./GestionPagos";
 import Configuracion from "./Configuracion";
@@ -24,6 +25,7 @@ import RestablecerContrasena from "./RestablecerContrasena";
 import PoliticasSeguridad from "./PoliticasSeguridad";
 import PreguntasFrecuentes from "./PreguntasFrecuentes";
 import Contactanos from "./Contactanos";
+import ChatList from "./ChatList";
 
 import Header from "./Header";
 import HeaderAdmin from "./HeaderAdmin";
@@ -270,7 +272,19 @@ function App() {
               }
             />
 
-            {/* 👥 Ver perfil de otro usuario */}
+            {/* � Chat */}
+            <Route
+              path="/chat"
+              element={
+                <PrivateRoute isLoggedIn={isLoggedIn}>
+                  <Layout header={<Header setIsLoggedIn={setIsLoggedIn} />}>
+                    <ChatList />
+                  </Layout>
+                </PrivateRoute>
+              }
+            />
+
+            {/* �👥 Ver perfil de otro usuario */}
             <Route
               path="/perfil/:id_usuario"
               element={
@@ -338,6 +352,18 @@ function App() {
                 <AdminRoute isLoggedIn={isLoggedIn}>
                   <AdminLayout header={<HeaderAdmin setIsLoggedIn={setIsLoggedIn} />}>
                     <GestionPagos />
+                  </AdminLayout>
+                </AdminRoute>
+              }
+            />
+
+            {/* Editar publicación desde Admin */}
+            <Route
+              path="/AdminDashboard/editar_publicacion/:id"
+              element={
+                <AdminRoute isLoggedIn={isLoggedIn}>
+                  <AdminLayout header={<HeaderAdmin setIsLoggedIn={setIsLoggedIn} />}>
+                    <GestionarPublicacionesAdmin />
                   </AdminLayout>
                 </AdminRoute>
               }

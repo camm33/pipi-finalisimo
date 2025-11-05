@@ -2,6 +2,7 @@ from flask import Blueprint, jsonify, request
 from bd import obtener_conexion
 from datetime import datetime, date
 from email.utils import parsedate_to_datetime
+import pymysql
 import re
 
 
@@ -56,7 +57,7 @@ def _format_pago_row(row):
 @pagos_bp.route('/', methods=['GET'])
 def obtener_pagos():
     conexion = obtener_conexion()
-    with conexion.cursor() as cursor:
+    with conexion.cursor(pymysql.cursors.DictCursor) as cursor:
         cursor.execute('SELECT * FROM pago')
         filas = cursor.fetchall()
     conexion.close()
@@ -75,7 +76,7 @@ def crear_pago():
     fecha_pago = _normalize_fecha(datos.get('fecha_pago'))
 
     conexion = obtener_conexion()
-    with conexion.cursor() as cursor:
+    with conexion.cursor(pymysql.cursors.DictCursor) as cursor:
         cursor.execute(
             """
             INSERT INTO pago (id_usuario, id_publicacion, monto, metodo_pago, estado_pago, fecha_pago)
@@ -85,7 +86,7 @@ def crear_pago():
         )
         new_id = cursor.lastrowid
     conexion.commit()
-    with conexion.cursor() as cursor:
+    with conexion.cursor(pymysql.cursors.DictCursor) as cursor:
         cursor.execute('SELECT * FROM pago WHERE id_pago = %s', (new_id,))
         row = cursor.fetchone()
     conexion.close()
@@ -95,7 +96,7 @@ def crear_pago():
 @pagos_bp.route('/<int:id_pago>', methods=['GET'])
 def obtener_pago(id_pago):
     conexion = obtener_conexion()
-    with conexion.cursor() as cursor:
+    with conexion.cursor(pymysql.cursors.DictCursor) as cursor:
         cursor.execute('SELECT * FROM pago WHERE id_pago = %s', (id_pago,))
         row = cursor.fetchone()
     conexion.close()
@@ -109,7 +110,7 @@ def editar_pago(id_pago):
     datos = request.json or {}
     # Obtener columnas seguras
     conexion = obtener_conexion()
-    with conexion.cursor() as cursor:
+    with conexion.cursor(pymysql.cursors.DictCursor) as cursor:
         cursor.execute("SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'pago' AND TABLE_SCHEMA = DATABASE()")
         cols = {r['COLUMN_NAME'] for r in cursor.fetchall()}
 
@@ -139,10 +140,10 @@ def editar_pago(id_pago):
     valores.append(id_pago)
     sql = f"UPDATE pago SET {', '.join(campos)} WHERE id_pago = %s"
     conexion = obtener_conexion()
-    with conexion.cursor() as cursor:
+    with conexion.cursor(pymysql.cursors.DictCursor) as cursor:
         cursor.execute(sql, tuple(valores))
     conexion.commit()
-    with conexion.cursor() as cursor:
+    with conexion.cursor(pymysql.cursors.DictCursor) as cursor:
         cursor.execute('SELECT * FROM pago WHERE id_pago = %s', (id_pago,))
         row = cursor.fetchone()
     conexion.close()
@@ -154,7 +155,7 @@ def editar_pago(id_pago):
 @pagos_bp.route('/<int:id_pago>', methods=['DELETE'])
 def borrar_pago(id_pago):
     conexion = obtener_conexion()
-    with conexion.cursor() as cursor:
+    with conexion.cursor(pymysql.cursors.DictCursor) as cursor:
         cursor.execute('SELECT COUNT(*) as cnt FROM pago WHERE id_pago = %s', (id_pago,))
         r = cursor.fetchone()
         if not r or r.get('cnt', 0) == 0:
@@ -178,7 +179,7 @@ def borrar_pago_tolerante(maybe_id):
     if id_pago is None:
         return jsonify({'error': 'ID inválido'}), 400
     conexion = obtener_conexion()
-    with conexion.cursor() as cursor:
+    with conexion.cursor(pymysql.cursors.DictCursor) as cursor:
         cursor.execute('SELECT COUNT(*) as cnt FROM pago WHERE id_pago = %s', (id_pago,))
         r = cursor.fetchone()
         if not r or r.get('cnt', 0) == 0:
@@ -186,7 +187,7 @@ def borrar_pago_tolerante(maybe_id):
             return jsonify({'error': 'Pago no encontrado'}), 404
         cursor.execute('DELETE FROM pago WHERE id_pago = %s', (id_pago,))
     conexion.commit()
-    with conexion.cursor() as cursor:
+    with conexion.cursor(pymysql.cursors.DictCursor) as cursor:
         cursor.execute('SELECT COUNT(*) as cnt FROM pago WHERE id_pago = %s', (id_pago,))
         after = cursor.fetchone()
         print(f"[borrar_pago_tolerante] after delete check for id={id_pago} -> {after}")
@@ -197,7 +198,7 @@ def borrar_pago_tolerante(maybe_id):
 @pagos_bp.route('/debug/check/<int:id_pago>', methods=['GET'])
 def debug_check_pago(id_pago):
     conexion = obtener_conexion()
-    with conexion.cursor() as cursor:
+    with conexion.cursor(pymysql.cursors.DictCursor) as cursor:
         cursor.execute('SELECT COUNT(*) as cnt FROM pago WHERE id_pago = %s', (id_pago,))
         row = cursor.fetchone()
         exists = bool(row and row.get('cnt', 0) > 0)
@@ -213,12 +214,12 @@ def debug_check_pago(id_pago):
 def debug_force_delete_pago(id_pago):
     print(f"[debug_force_delete_pago] request to delete id={id_pago}")
     conexion = obtener_conexion()
-    with conexion.cursor() as cursor:
+    with conexion.cursor(pymysql.cursors.DictCursor) as cursor:
         cursor.execute('SELECT COUNT(*) as cnt FROM pago WHERE id_pago = %s', (id_pago,))
         before = cursor.fetchone()
         cursor.execute('DELETE FROM pago WHERE id_pago = %s', (id_pago,))
     conexion.commit()
-    with conexion.cursor() as cursor:
+    with conexion.cursor(pymysql.cursors.DictCursor) as cursor:
         cursor.execute('SELECT COUNT(*) as cnt FROM pago WHERE id_pago = %s', (id_pago,))
         after = cursor.fetchone()
     conexion.close()

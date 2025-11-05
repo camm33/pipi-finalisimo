@@ -64,6 +64,7 @@ from admin_home import admin_home_bp
 from mi_perfil import mi_perfil_bp
 from Editar import editar_perfil_bp  
 from gestion_prendas import gestion_prendas_bp
+from gestion_pagos import pagos_bp
 from reportes import estadistica_tallas_bp, prendas_talla_bp, peores_valoraciones_bp, prendas_caras_vs_economicas_bp
 from mensaje import mensaje_bp
 from recuperar_contrasena import recuperar_bp
@@ -79,6 +80,7 @@ app.register_blueprint(admin_home_bp)
 app.register_blueprint(mi_perfil_bp)
 app.register_blueprint(editar_perfil_bp)
 app.register_blueprint(gestion_prendas_bp)
+app.register_blueprint(pagos_bp)
 app.register_blueprint(estadistica_tallas_bp)
 app.register_blueprint(prendas_talla_bp)
 app.register_blueprint(peores_valoraciones_bp)
